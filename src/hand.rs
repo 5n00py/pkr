@@ -10,7 +10,9 @@ pub struct InvalidHandError {
 
 impl InvalidHandError {
     fn new(details: &str) -> InvalidHandError {
-        InvalidHandError{details: details.to_string()}
+        InvalidHandError {
+            details: details.to_string(),
+        }
     }
 }
 
@@ -42,10 +44,69 @@ impl Hand {
     pub fn new(cards: Vec<Card>) -> Result<Hand, InvalidHandError> {
         let num_cards = cards.len();
         if num_cards < 5 || num_cards > 7 {
-            return Err(InvalidHandError::new("A poker hand must have between 5 and 7 cards."));
+            return Err(InvalidHandError::new(
+                "A poker hand must have between 5 and 7 cards.",
+            ));
         }
-        
+
         Ok(Hand { cards })
+    }
+
+    /// Creates a new `Hand` from a string.
+    ///
+    /// # Arguments
+    ///
+    /// * `s` - A string slice that holds the card identifiers.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use pkr::hand::Hand;
+    ///
+    /// let hand = Hand::new_from_str("As Ks Qs Js Ts").unwrap();
+    /// assert_eq!(hand.get_cards().len(), 5);
+    /// ```
+    ///
+    /// # Errors
+    ///
+    /// Returns an `InvalidHandError` if the string does not represent a valid hand.
+    pub fn new_from_str(s: &str) -> Result<Self, InvalidHandError> {
+        let strings: Vec<&str> = s.split_whitespace().collect();
+        if strings.len() < 5 || strings.len() > 7 {
+            return Err(InvalidHandError::new(
+                "A hand should consist of 5 or 7 cards.",
+            ));
+        }
+
+        let mut cards = Vec::new();
+        for s in strings {
+            match Card::new_from_string(s) {
+                Ok(card) => cards.push(card),
+                Err(_) => {
+                    return Err(InvalidHandError::new(&format!(
+                        "Invalid card string: {}",
+                        s
+                    )))
+                }
+            };
+        }
+        Ok(Hand { cards })
+    }
+
+    /// Adds multiple cards to the hand.
+    pub fn add_cards(&mut self, new_cards: Vec<Card>) -> Result<(), InvalidHandError> {
+        if self.cards.len() + new_cards.len() > 7 {
+            return Err(InvalidHandError::new("Too many cards to add."));
+        }
+        for card in new_cards {
+            self.cards.push(card);
+        }
+        Ok(())
+    }
+
+    /// Returns a reference to the cards in the hand.
+    pub fn get_cards(&self) -> &Vec<Card> {
+        &self.cards
     }
 }
 
