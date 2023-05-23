@@ -117,8 +117,8 @@ impl Hand {
 
     /// Returns a string representation of the `Hand`.
     ///
-    /// The string consists of card identifiers separated by spaces. Each card 
-    /// identifier consists of two characters: the rank and the suit. For 
+    /// The string consists of card identifiers separated by spaces. Each card
+    /// identifier consists of two characters: the rank and the suit. For
     /// example, the ace of clubs is represented as "Ac".
     ///
     /// # Examples
@@ -138,10 +138,62 @@ impl Hand {
     /// assert_eq!(hand.as_str(), "Ac Ks Qh Jd Tc");
     /// ```
     pub fn as_str(&self) -> String {
-        self.cards.iter()
+        self.cards
+            .iter()
             .map(|card| card.as_str())
             .collect::<Vec<_>>()
             .join(" ")
+    }
+
+    /// Sorts the cards in the hand by suit in ascending order.
+    ///
+    /// The relative order of cards with the same suit is maintained.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use pkr::hand::Hand;
+    /// use pkr::card::{Card, Rank, Suit};
+    ///
+    /// let mut hand = Hand::new(vec![
+    ///     Card { rank: Rank::Ace, suit: Suit::Heart },
+    ///     Card { rank: Rank::King, suit: Suit::Club },
+    ///     Card { rank: Rank::Queen, suit: Suit::Spade },
+    ///     Card { rank: Rank::Jack, suit: Suit::Diamond },
+    ///     Card { rank: Rank::Ten, suit: Suit::Heart },
+    /// ]).unwrap();
+    ///
+    /// hand.sort_by_suit();
+    ///
+    /// assert_eq!(hand.as_str(), "Kc Jd Ah Th Qs");
+    /// ```
+    pub fn sort_by_suit(&mut self) {
+        self.cards
+            .sort_by(|a, b| a.suit.partial_cmp(&b.suit).unwrap());
+    }
+
+    /// Sorts the hand by rank, preserving the original order within each rank.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use pkr::card::{Card, Rank, Suit};
+    /// use pkr::hand::Hand;
+    ///
+    /// let mut hand = Hand::new(vec![
+    ///     Card::new(Rank::Ace, Suit::Heart),
+    ///     Card::new(Rank::Two, Suit::Spade),
+    ///     Card::new(Rank::Four, Suit::Diamond),
+    ///     Card::new(Rank::Five, Suit::Heart),
+    ///     Card::new(Rank::Three, Suit::Heart),
+    /// ]).unwrap();
+    ///
+    /// hand.sort_by_rank();
+    /// assert_eq!(hand.as_str(), "2s 3h 4d 5h Ah");
+    /// ```
+    pub fn sort_by_rank(&mut self) {
+        self.cards
+            .sort_by(|a, b| a.rank.partial_cmp(&b.rank).unwrap());
     }
 }
 

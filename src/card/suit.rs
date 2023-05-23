@@ -10,11 +10,11 @@
 /// let suit = Suit::Heart;
 /// assert_eq!(suit, Suit::Heart);
 /// ```
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd)]
 pub enum Suit {
-    Heart,
-    Diamond,
     Club,
+    Diamond,
+    Heart,
     Spade,
 }
 
