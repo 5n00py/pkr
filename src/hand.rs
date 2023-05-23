@@ -1,3 +1,5 @@
+use std::error::Error;
+
 use crate::card::Card;
 use crate::card::Suit;
 
@@ -32,8 +34,8 @@ impl Hand {
     ///
     /// # Errors
     ///
-    /// Returns a `std::error::Error` if the hand does not have between 5 and 7 cards.
-    pub fn new(cards: Vec<Card>) -> Result<Hand, Box<dyn std::error::Error>> {
+    /// Returns a `Box<dyn Error>` if the hand does not have between 5 and 7 cards.
+    pub fn new(cards: Vec<Card>) -> Result<Hand, Box<dyn Error>> {
         let num_cards = cards.len();
         if num_cards < 5 || num_cards > 7 {
             return Err("A poker hand must have between 5 and 7 cards.".into());
@@ -59,8 +61,8 @@ impl Hand {
     ///
     /// # Errors
     ///
-    /// Returns a `std::error::Error` if the string does not represent a valid hand.
-    pub fn new_from_str(s: &str) -> Result<Self, Box<dyn std::error::Error>> {
+    /// Returns a `Box<dyn Error>` if the string does not represent a valid hand.
+    pub fn new_from_str(s: &str) -> Result<Self, Box<dyn Error>> {
         let strings: Vec<&str> = s.split_whitespace().collect();
         if strings.len() < 5 || strings.len() > 7 {
             return Err("A hand poker hand must have between 5 and 7 cards.".into());
@@ -83,8 +85,8 @@ impl Hand {
     ///
     /// # Errors
     ///
-    /// Returns a `std::error::Error` if adding the card would result in more than 7 cards in the hand.
-    pub fn add_card(&mut self, new_card: Card) -> Result<(), Box<dyn std::error::Error>> {
+    /// Returns a `Box<dyn Error>` if adding the card would result in more than 7 cards in the hand.
+    pub fn add_card(&mut self, new_card: Card) -> Result<(), Box<dyn Error>> {
         if self.cards.len() + 1 > 7 {
             return Err("Too many cards in the hand.".into());
         }
@@ -100,8 +102,8 @@ impl Hand {
     ///
     /// # Errors
     ///
-    /// Returns a `std::error::Error` if adding the cards would result in more than 7 cards in the hand.
-    pub fn add_cards(&mut self, new_cards: Vec<Card>) -> Result<(), Box<dyn std::error::Error>> {
+    /// Returns a `Box<dyn Error>` if adding the cards would result in more than 7 cards in the hand.
+    pub fn add_cards(&mut self, new_cards: Vec<Card>) -> Result<(), Box<dyn Error>> {
         if self.cards.len() + new_cards.len() > 7 {
             return Err("Too many cards to add.".into());
         }
@@ -114,6 +116,11 @@ impl Hand {
     /// Returns a reference to the cards in the hand.
     pub fn get_cards(&self) -> &Vec<Card> {
         &self.cards
+    }
+
+    /// Returns the number of cards in the hand.
+    pub fn get_count(&self) -> usize {
+        self.cards.len()
     }
 
     /// Returns a string representation of the `Hand`.
@@ -175,26 +182,37 @@ impl Hand {
 
     /// Sorts the hand by rank, preserving the original order within each rank.
     ///
+    /// # Arguments
+    ///
+    /// * `ascending` - A boolean indicating if sorting should be in ascending 
+    ///                 order (true) or descending order (false).
+    ///
+    /// # Errors
+    ///
+    /// Returns a `Box<dyn Error>` if the ranks cannot be compared.
+    ///
     /// # Examples
     ///
     /// ```
     /// use pkr::card::{Card, Rank, Suit};
     /// use pkr::hand::Hand;
     ///
-    /// let mut hand = Hand::new(vec![
-    ///     Card::new(Rank::Ace, Suit::Heart),
-    ///     Card::new(Rank::Two, Suit::Spade),
-    ///     Card::new(Rank::Four, Suit::Diamond),
-    ///     Card::new(Rank::Five, Suit::Heart),
-    ///     Card::new(Rank::Three, Suit::Heart),
-    /// ]).unwrap();
-    ///
-    /// hand.sort_by_rank();
+    /// let mut hand = Hand::new_from_str("Ah 2s 4d 5h 3h").unwrap();
+    /// hand.sort_by_rank(true).unwrap();
     /// assert_eq!(hand.as_str(), "2s 3h 4d 5h Ah");
+    ///
+    /// hand.sort_by_rank(false).unwrap();
+    /// assert_eq!(hand.as_str(), "Ah 5h 4d 3h 2s");
     /// ```
-    pub fn sort_by_rank(&mut self) {
-        self.cards
-            .sort_by(|a, b| a.rank.partial_cmp(&b.rank).unwrap());
+    pub fn sort_by_rank(&mut self, ascending: bool) -> Result<(), Box<dyn Error>> {
+        if ascending {
+            self.cards
+                .sort_by(|a, b| a.rank.partial_cmp(&b.rank).unwrap());
+        } else {
+            self.cards
+                .sort_by(|a, b| b.rank.partial_cmp(&a.rank).unwrap());
+        }
+        Ok(())
     }
 
     /// Returns all cards in the hand of a given suit.
