@@ -114,6 +114,35 @@ impl Hand {
     pub fn get_cards(&self) -> &Vec<Card> {
         &self.cards
     }
+
+    /// Returns a string representation of the `Hand`.
+    ///
+    /// The string consists of card identifiers separated by spaces. Each card 
+    /// identifier consists of two characters: the rank and the suit. For 
+    /// example, the ace of clubs is represented as "Ac".
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use pkr::hand::Hand;
+    /// use pkr::card::{Card, Rank, Suit};
+    ///
+    /// let hand = Hand::new(vec![
+    ///     Card { rank: Rank::Ace, suit: Suit::Club },
+    ///     Card { rank: Rank::King, suit: Suit::Spade },
+    ///     Card { rank: Rank::Queen, suit: Suit::Heart },
+    ///     Card { rank: Rank::Jack, suit: Suit::Diamond },
+    ///     Card { rank: Rank::Ten, suit: Suit::Club },
+    /// ]).unwrap();
+    ///
+    /// assert_eq!(hand.as_str(), "Ac Ks Qh Jd Tc");
+    /// ```
+    pub fn as_str(&self) -> String {
+        self.cards.iter()
+            .map(|card| card.as_str())
+            .collect::<Vec<_>>()
+            .join(" ")
+    }
 }
 
 #[test]
