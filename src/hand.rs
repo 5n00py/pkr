@@ -18,11 +18,11 @@ impl Hand {
     /// use pkr::hand::Hand;
     ///
     /// let cards = vec![
-    ///     Card::new_from_string("Ah").unwrap(),
-    ///     Card::new_from_string("Kh").unwrap(),
-    ///     Card::new_from_string("Qh").unwrap(),
-    ///     Card::new_from_string("Jh").unwrap(),
-    ///     Card::new_from_string("Th").unwrap(),
+    ///     Card::new_from_str("Ah").unwrap(),
+    ///     Card::new_from_str("Kh").unwrap(),
+    ///     Card::new_from_str("Qh").unwrap(),
+    ///     Card::new_from_str("Jh").unwrap(),
+    ///     Card::new_from_str("Th").unwrap(),
     /// ];
     ///
     /// let hand = Hand::new(cards).unwrap();
@@ -53,14 +53,14 @@ impl Hand {
     /// ```
     /// use pkr::hand::Hand;
     ///
-    /// let hand = Hand::new_from_string("As Ks Qs Js Ts").unwrap();
+    /// let hand = Hand::new_from_str("As Ks Qs Js Ts").unwrap();
     /// assert_eq!(hand.get_cards().len(), 5);
     /// ```
     ///
     /// # Errors
     ///
     /// Returns a `std::error::Error` if the string does not represent a valid hand.
-    pub fn new_from_string(s: &str) -> Result<Self, Box<dyn std::error::Error>> {
+    pub fn new_from_str(s: &str) -> Result<Self, Box<dyn std::error::Error>> {
         let strings: Vec<&str> = s.split_whitespace().collect();
         if strings.len() < 5 || strings.len() > 7 {
             return Err("A hand poker hand must have between 5 and 7 cards.".into());
@@ -69,7 +69,7 @@ impl Hand {
         let mut cards = Vec::new();
         for s in strings {
             let card =
-                Card::new_from_string(s).map_err(|_| format!("Invalid card string: {}", s))?;
+                Card::new_from_str(s).map_err(|_| format!("Invalid card string: {}", s))?;
             cards.push(card);
         }
         Ok(Hand { cards })
@@ -232,13 +232,13 @@ impl Hand {
 #[test]
 fn test_create_hand() {
     let cards = vec![
-        Card::new_from_string("2h").unwrap(),
-        Card::new_from_string("3d").unwrap(),
-        Card::new_from_string("4s").unwrap(),
-        Card::new_from_string("5c").unwrap(),
-        Card::new_from_string("6h").unwrap(),
-        Card::new_from_string("7d").unwrap(),
-        Card::new_from_string("8s").unwrap(),
+        Card::new_from_str("2h").unwrap(),
+        Card::new_from_str("3d").unwrap(),
+        Card::new_from_str("4s").unwrap(),
+        Card::new_from_str("5c").unwrap(),
+        Card::new_from_str("6h").unwrap(),
+        Card::new_from_str("7d").unwrap(),
+        Card::new_from_str("8s").unwrap(),
     ];
 
     let hand = Hand::new(cards);
@@ -252,8 +252,8 @@ fn test_create_hand() {
 #[test]
 fn test_create_hand_with_wrong_number_of_cards() {
     let cards = vec![
-        Card::new_from_string("2h").unwrap(),
-        Card::new_from_string("3d").unwrap(),
+        Card::new_from_str("2h").unwrap(),
+        Card::new_from_str("3d").unwrap(),
     ];
 
     let result = Hand::new(cards);

@@ -41,14 +41,14 @@ impl Rank {
     /// ```
     /// use pkr::card::Rank;
     ///
-    /// let r = Rank::rank_from_string("A").unwrap();
+    /// let r = Rank::new_from_str("A").unwrap();
     /// assert_eq!(r, Rank::Ace);
     /// ```
     ///
     /// # Errors
     ///
     /// Returns a `Box<dyn std::error::Error>` if the string does not match any rank.
-    pub fn rank_from_string(s: &str) -> Result<Self, Box<dyn std::error::Error>> {
+    pub fn new_from_str(s: &str) -> Result<Self, Box<dyn std::error::Error>> {
         match s {
             "2" => Ok(Rank::Two),
             "3" => Ok(Rank::Three),
@@ -107,17 +107,17 @@ mod tests {
     use super::*;
 
     #[test]
-    fn valid_rank_from_string() {
-        assert_eq!(Rank::rank_from_string("A").unwrap(), Rank::Ace);
-        assert_eq!(Rank::rank_from_string("K").unwrap(), Rank::King);
-        assert_eq!(Rank::rank_from_string("Q").unwrap(), Rank::Queen);
-        assert_eq!(Rank::rank_from_string("J").unwrap(), Rank::Jack);
-        assert_eq!(Rank::rank_from_string("T").unwrap(), Rank::Ten);
-        assert_eq!(Rank::rank_from_string("2").unwrap(), Rank::Two);
+    fn valid_rank_from_str() {
+        assert_eq!(Rank::new_from_str("A").unwrap(), Rank::Ace);
+        assert_eq!(Rank::new_from_str("K").unwrap(), Rank::King);
+        assert_eq!(Rank::new_from_str("Q").unwrap(), Rank::Queen);
+        assert_eq!(Rank::new_from_str("J").unwrap(), Rank::Jack);
+        assert_eq!(Rank::new_from_str("T").unwrap(), Rank::Ten);
+        assert_eq!(Rank::new_from_str("2").unwrap(), Rank::Two);
     }
 
     #[test]
-    fn invalid_rank_from_string() {
-        assert!(Rank::rank_from_string("x").is_err());
+    fn invalid_rank_from_str() {
+        assert!(Rank::new_from_str("x").is_err());
     }
 }

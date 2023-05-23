@@ -30,14 +30,14 @@ impl Suit {
     /// ```
     /// use pkr::card::Suit;
     ///
-    /// let s = Suit::new_from_string("h").unwrap();
+    /// let s = Suit::new_from_str("h").unwrap();
     /// assert_eq!(s, Suit::Heart);
     /// ```
     ///
     /// # Errors
     ///
     /// Returns an `Box<dyn std::error::Error>` if the string does not match any suit.
-    pub fn new_from_string(s: &str) -> Result<Self, Box<dyn std::error::Error>> {
+    pub fn new_from_str(s: &str) -> Result<Self, Box<dyn std::error::Error>> {
         match s {
             "h" => Ok(Suit::Heart),
             "d" => Ok(Suit::Diamond),
@@ -82,14 +82,14 @@ mod tests {
 
     #[test]
     fn valid_suit_from_string() {
-        assert_eq!(Suit::new_from_string("h").unwrap(), Suit::Heart);
-        assert_eq!(Suit::new_from_string("d").unwrap(), Suit::Diamond);
-        assert_eq!(Suit::new_from_string("c").unwrap(), Suit::Club);
-        assert_eq!(Suit::new_from_string("s").unwrap(), Suit::Spade);
+        assert_eq!(Suit::new_from_str("h").unwrap(), Suit::Heart);
+        assert_eq!(Suit::new_from_str("d").unwrap(), Suit::Diamond);
+        assert_eq!(Suit::new_from_str("c").unwrap(), Suit::Club);
+        assert_eq!(Suit::new_from_str("s").unwrap(), Suit::Spade);
     }
 
     #[test]
-    fn invalid_suit_from_string() {
-        assert!(Suit::new_from_string("x").is_err());
+    fn invalid_suit_from_str() {
+        assert!(Suit::new_from_str("x").is_err());
     }
 }

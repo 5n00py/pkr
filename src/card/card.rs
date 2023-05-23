@@ -42,7 +42,7 @@ impl Card {
     /// ```
     /// use pkr::card::{Card, Rank, Suit};
     ///
-    /// let card = Card::new_from_string("Ac").unwrap();
+    /// let card = Card::new_from_str("Ac").unwrap();
     /// assert_eq!(card, Card { rank: Rank::Ace, suit: Suit::Club });
     /// ```
     ///
@@ -50,13 +50,13 @@ impl Card {
     ///
     /// Returns a `Box<dyn std::error::Error>` if the string does not match
     /// any card, the rank or the suit are invalid.
-    pub fn new_from_string(s: &str) -> Result<Self, Box<dyn std::error::Error>> {
+    pub fn new_from_str(s: &str) -> Result<Self, Box<dyn std::error::Error>> {
         if s.len() != 2 {
             return Err("Card string must be of length 2".into());
         }
 
-        let rank = Rank::rank_from_string(&s[0..1])?;
-        let suit = Suit::new_from_string(&s[1..2])?;
+        let rank = Rank::new_from_str(&s[0..1])?;
+        let suit = Suit::new_from_str(&s[1..2])?;
 
         Ok(Self { rank, suit })
     }
@@ -87,7 +87,7 @@ mod tests {
 
     #[test]
     fn new_card_from_string() {
-        let card = Card::new_from_string("Ac").unwrap();
+        let card = Card::new_from_str("Ac").unwrap();
         assert_eq!(
             card,
             Card {
@@ -96,7 +96,7 @@ mod tests {
             }
         );
 
-        let card = Card::new_from_string("Td").unwrap();
+        let card = Card::new_from_str("Td").unwrap();
         assert_eq!(
             card,
             Card {
@@ -105,7 +105,7 @@ mod tests {
             }
         );
 
-        let card = Card::new_from_string("3s").unwrap();
+        let card = Card::new_from_str("3s").unwrap();
         assert_eq!(
             card,
             Card {
@@ -117,10 +117,10 @@ mod tests {
 
     #[test]
     fn new_card_from_invalid_string() {
-        assert!(Card::new_from_string("AcA").is_err());
-        assert!(Card::new_from_string("M").is_err());
-        assert!(Card::new_from_string("As1").is_err());
-        assert!(Card::new_from_string("1c").is_err());
-        assert!(Card::new_from_string("").is_err());
+        assert!(Card::new_from_str("AcA").is_err());
+        assert!(Card::new_from_str("M").is_err());
+        assert!(Card::new_from_str("As1").is_err());
+        assert!(Card::new_from_str("1c").is_err());
+        assert!(Card::new_from_str("").is_err());
     }
 }
