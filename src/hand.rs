@@ -1,6 +1,6 @@
 use std::error::Error;
 
-use crate::card::Card;
+use crate::card::{Card, Rank};
 use crate::card::Suit;
 
 /// Represents a poker hand.
@@ -121,6 +121,36 @@ impl Hand {
     /// Returns the number of cards in the hand.
     pub fn get_count(&self) -> usize {
         self.cards.len()
+    }
+
+    /// Returns the ranks of all cards in the hand, ignoring the suits.
+    ///
+    /// This can be useful when only the ranks of the cards matter for a certain
+    /// operation or comparison, and the suits are irrelevant.
+    ///
+    /// # Returns
+    ///
+    /// A Vec of Rank representing the ranks of all cards in the hand.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use pkr::card::{Card, Rank, Suit};
+    /// use pkr::hand::Hand;
+    ///
+    /// let hand = Hand::new(vec![
+    ///     Card::new(Rank::Ace, Suit::Heart),
+    ///     Card::new(Rank::Two, Suit::Spade),
+    ///     Card::new(Rank::Four, Suit::Diamond),
+    ///     Card::new(Rank::Five, Suit::Heart),
+    ///     Card::new(Rank::Three, Suit::Heart),
+    /// ]).unwrap();
+    ///
+    /// let ranks = hand.get_ranks();
+    /// assert_eq!(ranks, vec![Rank::Ace, Rank::Two, Rank::Four, Rank::Five, Rank::Three]);
+    /// ```
+    pub fn get_ranks(&self) -> Vec<Rank> {
+        self.cards.iter().map(|card| card.rank).collect()
     }
 
     /// Returns a string representation of the `Hand`.
