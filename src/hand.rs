@@ -1,4 +1,5 @@
 use crate::card::Card;
+use crate::card::Suit;
 
 /// Represents a poker hand.
 ///
@@ -194,6 +195,37 @@ impl Hand {
     pub fn sort_by_rank(&mut self) {
         self.cards
             .sort_by(|a, b| a.rank.partial_cmp(&b.rank).unwrap());
+    }
+
+    /// Returns all cards in the hand of a given suit.
+    ///
+    /// # Arguments
+    ///
+    /// * `suit` - A suit of which the cards are to be returned.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use pkr::hand::Hand;
+    /// use pkr::card::{Card, Rank, Suit};
+    ///
+    /// let hand = Hand::new(vec![
+    ///     Card { rank: Rank::Two, suit: Suit::Heart },
+    ///     Card { rank: Rank::Three, suit: Suit::Heart },
+    ///     Card { rank: Rank::Four, suit: Suit::Spade },
+    ///     Card { rank: Rank::Five, suit: Suit::Diamond },
+    ///     Card { rank: Rank::Six, suit: Suit::Heart },
+    /// ]).unwrap();
+    ///
+    /// let hearts = hand.cards_of_suit(Suit::Heart);
+    /// assert_eq!(hearts.len(), 3);
+    /// ```
+    pub fn cards_of_suit(&self, suit: Suit) -> Vec<Card> {
+        self.cards
+            .iter()
+            .filter(|&card| card.suit == suit)
+            .cloned()
+            .collect()
     }
 }
 
