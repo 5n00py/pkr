@@ -4,25 +4,6 @@ use std::fmt;
 use super::Rank;
 use super::Suit;
 
-#[derive(Debug)]
-pub enum CardParseError {
-    InvalidLength,
-    InvalidRank(super::rank::InvalidRankError),
-    InvalidSuit(super::suit::InvalidSuitError),
-}
-
-impl fmt::Display for CardParseError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            CardParseError::InvalidLength => write!(f, "Card string should be 2 characters long"),
-            CardParseError::InvalidRank(e) => write!(f, "Invalid rank: {}", e),
-            CardParseError::InvalidSuit(e) => write!(f, "Invalid suit: {}", e),
-        }
-    }
-}
-
-impl error::Error for CardParseError {}
-
 /// Represents a playing card with a rank and suit in a standard 52-card deck.
 ///
 /// A card is a combination of a rank and a suit.
@@ -67,14 +48,15 @@ impl Card {
     ///
     /// # Errors
     ///
-    /// Returns an `CardParseError` if the string does not match any card, the rank or the suit are invalid.
-    pub fn new_from_string(s: &str) -> Result<Self, CardParseError> {
+    /// Returns a `Box<dyn std::error::Error>` if the string does not match
+    /// any card, the rank or the suit are invalid.
+    pub fn new_from_string(s: &str) -> Result<Self, Box<dyn std::error::Error>> {
         if s.len() != 2 {
-            return Err(CardParseError::InvalidLength);
+            return Err("Card string must be of length 2".into());
         }
 
-        let rank = Rank::rank_from_string(&s[0..1]).map_err(CardParseError::InvalidRank)?;
-        let suit = Suit::new_from_string(&s[1..2]).map_err(CardParseError::InvalidSuit)?;
+        let rank = Rank::rank_from_string(&s[0..1])?;
+        let suit = Suit::new_from_string(&s[1..2])?;
 
         Ok(Self { rank, suit })
     }

@@ -1,27 +1,3 @@
-use std::fmt;
-
-/// Errors that can occur when creating a `Suit` from a string.
-#[derive(Debug, Clone)]
-pub struct InvalidSuitError {
-    details: String,
-}
-
-impl InvalidSuitError {
-    fn new(details: &str) -> InvalidSuitError {
-        InvalidSuitError {
-            details: details.to_string(),
-        }
-    }
-}
-
-impl fmt::Display for InvalidSuitError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.details)
-    }
-}
-
-impl std::error::Error for InvalidSuitError {}
-
 /// Represents the suit of a playing card in a standard 52-card deck.
 ///
 /// The suits are represented as enum variants: Heart, Diamond, Club, and Spade.
@@ -60,14 +36,14 @@ impl Suit {
     ///
     /// # Errors
     ///
-    /// Returns an `InvalidSuitError` if the string does not match any suit.
-    pub fn new_from_string(s: &str) -> Result<Self, InvalidSuitError> {
+    /// Returns an `Box<dyn std::error::Error>` if the string does not match any suit.
+    pub fn new_from_string(s: &str) -> Result<Self, Box<dyn std::error::Error>> {
         match s {
             "h" => Ok(Suit::Heart),
             "d" => Ok(Suit::Diamond),
             "c" => Ok(Suit::Club),
             "s" => Ok(Suit::Spade),
-            _ => Err(InvalidSuitError::new("Invalid suit identifier")),
+            _ => Err("Invalid suit identifier".into()),
         }
     }
 

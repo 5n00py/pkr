@@ -1,27 +1,3 @@
-use std::fmt;
-
-/// Errors that can occur when creating a `Rank` from a string.
-#[derive(Debug, Clone)]
-pub struct InvalidRankError {
-    details: String,
-}
-
-impl InvalidRankError {
-    fn new(details: &str) -> InvalidRankError {
-        InvalidRankError {
-            details: details.to_string(),
-        }
-    }
-}
-
-impl fmt::Display for InvalidRankError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.details)
-    }
-}
-
-impl std::error::Error for InvalidRankError {}
-
 /// Represents the rank of a playing card in a standard 52-card deck.
 ///
 /// The ranks are represented as enum variants, from Two to Ace. The numerical
@@ -71,8 +47,8 @@ impl Rank {
     ///
     /// # Errors
     ///
-    /// Returns an `InvalidRankError` if the string does not match any rank.
-    pub fn rank_from_string(s: &str) -> Result<Self, InvalidRankError> {
+    /// Returns a `Box<dyn std::error::Error>` if the string does not match any rank.
+    pub fn rank_from_string(s: &str) -> Result<Self, Box<dyn std::error::Error>> {
         match s {
             "2" => Ok(Rank::Two),
             "3" => Ok(Rank::Three),
@@ -87,7 +63,7 @@ impl Rank {
             "Q" => Ok(Rank::Queen),
             "K" => Ok(Rank::King),
             "A" => Ok(Rank::Ace),
-            _ => Err(InvalidRankError::new("Invalid rank identifier")),
+            _ => Err("Invalid rank identifier".into()),
         }
     }
 
