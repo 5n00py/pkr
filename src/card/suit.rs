@@ -1,15 +1,4 @@
 /// Represents the suit of a playing card in a standard 52-card deck.
-///
-/// The suits are represented as enum variants: Heart, Diamond, Club, and Spade.
-///
-/// # Examples
-///
-/// ```
-/// use crate::pkr::card::Suit;
-///
-/// let suit = Suit::Heart;
-/// assert_eq!(suit, Suit::Heart);
-/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd)]
 pub enum Suit {
     Club,

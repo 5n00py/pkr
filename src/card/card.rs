@@ -1,23 +1,9 @@
-use std::error;
-use std::fmt;
+use std::error::Error;
 
 use super::Rank;
 use super::Suit;
 
 /// Represents a playing card with a rank and suit in a standard 52-card deck.
-///
-/// A card is a combination of a rank and a suit.
-///
-/// # Examples
-///
-/// ```
-/// use crate::pkr::card::Rank;
-/// use crate::pkr::card::Suit;
-/// use crate::pkr::card::Card;
-///
-/// let card = Card::new(Rank::Ace, Suit::Spade);
-/// assert_eq!(card, Card::new(Rank::Ace, Suit::Spade));
-/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Card {
     pub rank: Rank,
@@ -48,9 +34,9 @@ impl Card {
     ///
     /// # Errors
     ///
-    /// Returns a `Box<dyn std::error::Error>` if the string does not match
-    /// any card, the rank or the suit are invalid.
-    pub fn new_from_str(s: &str) -> Result<Self, Box<dyn std::error::Error>> {
+    /// Returns a `Box<dyn Error>` if the string does not match any card, the 
+    /// rank or the suit are invalid.
+    pub fn new_from_str(s: &str) -> Result<Self, Box<dyn Error>> {
         if s.len() != 2 {
             return Err("Card string must be of length 2".into());
         }

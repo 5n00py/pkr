@@ -1,17 +1,6 @@
+use std::error::Error;
+
 /// Represents the rank of a playing card in a standard 52-card deck.
-///
-/// The ranks are represented as enum variants, from Two to Ace. The numerical
-/// ordering of the variants represents the usual ordering of card ranks in most
-/// games, with Two being the lowest and Ace being the highest.
-///
-/// # Examples
-///
-/// ```
-/// use crate::pkr::card::Rank;
-///
-/// let rank = Rank::Ace;
-/// assert_eq!(rank, Rank::Ace);
-/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Rank {
     Two = 2,
@@ -47,8 +36,8 @@ impl Rank {
     ///
     /// # Errors
     ///
-    /// Returns a `Box<dyn std::error::Error>` if the string does not match any rank.
-    pub fn new_from_str(s: &str) -> Result<Self, Box<dyn std::error::Error>> {
+    /// Returns a `Box<dyn Error>` if the string does not match any rank.
+    pub fn new_from_str(s: &str) -> Result<Self, Box<dyn Error>> {
         match s {
             "2" => Ok(Rank::Two),
             "3" => Ok(Rank::Three),
@@ -102,11 +91,7 @@ impl Rank {
     }
 
     /// Returns the numerical value of a card's rank.
-    ///
-    /// # Returns
-    ///
-    /// An integer corresponding to the numerical value of the card's rank.
-    pub fn num_value(&self) -> u32 {
+    pub fn as_num(&self) -> u32 {
         match self {
             Rank::Two => 2,
             Rank::Three => 3,
