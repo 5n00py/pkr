@@ -56,6 +56,35 @@ impl Rank {
         }
     }
 
+    /// Creates a new instance of `Rank` from a numerical value.
+    ///
+    /// # Arguments
+    ///
+    /// * `num` - A usize representing a numerical value for a Rank.
+    ///
+    /// # Returns
+    ///
+    /// Returns an instance of `Result<Rank, Box<dyn Error>>`.
+    /// If `num` does not match any Rank, an error is returned.
+    pub fn new_from_num(num: usize) -> Result<Self, Box<dyn Error>> {
+        match num {
+            2 => Ok(Rank::Two),
+            3 => Ok(Rank::Three),
+            4 => Ok(Rank::Four),
+            5 => Ok(Rank::Five),
+            6 => Ok(Rank::Six),
+            7 => Ok(Rank::Seven),
+            8 => Ok(Rank::Eight),
+            9 => Ok(Rank::Nine),
+            10 => Ok(Rank::Ten),
+            11 => Ok(Rank::Jack),
+            12 => Ok(Rank::Queen),
+            13 => Ok(Rank::King),
+            14 => Ok(Rank::Ace),
+            _ => Err(format!("Invalid numerical value for Rank: {}", num).into()),
+        }
+    }
+
     /// Returns a string slice representing the `Rank`.
     ///
     /// # Examples

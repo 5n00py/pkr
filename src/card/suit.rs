@@ -1,3 +1,5 @@
+use std::error::Error;
+
 /// Represents the suit of a playing card in a standard 52-card deck.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd)]
 pub enum Suit {
@@ -25,7 +27,8 @@ impl Suit {
     ///
     /// # Errors
     ///
-    /// Returns an `Box<dyn std::error::Error>` if the string does not match any suit.
+    /// Returns an `Box<dyn std::error::Error>` if the string does not match 
+    /// any suit.
     pub fn new_from_str(s: &str) -> Result<Self, Box<dyn std::error::Error>> {
         match s {
             "h" => Ok(Suit::Heart),
@@ -33,6 +36,26 @@ impl Suit {
             "c" => Ok(Suit::Club),
             "s" => Ok(Suit::Spade),
             _ => Err("Invalid suit identifier".into()),
+        }
+    }
+
+    /// Creates a new instance of `Suit` from a numerical value.
+    ///
+    /// # Arguments
+    ///
+    /// * `num` - A usize representing a numerical value for a Suit.
+    ///
+    /// # Returns
+    ///
+    /// Returns an instance of `Result<Suit, Box<dyn Error>>`.
+    /// If `num` does not match any Suit, an error is returned.
+    pub fn new_from_num(num: usize) -> Result<Self, Box<dyn Error>> {
+        match num {
+            0 => Ok(Suit::Club),
+            1 => Ok(Suit::Diamond),
+            2 => Ok(Suit::Heart),
+            3 => Ok(Suit::Spade),
+            _ => Err(format!("Invalid numerical value for Suit: {}", num).into()),
         }
     }
 
