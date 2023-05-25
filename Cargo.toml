@@ -1,6 +1,6 @@
 [package]
 name = "pkr"
-version = "0.0.7"
+version = "0.0.6"
 edition = "2021"
 authors = ["David Schmid <david.schmid@mailbox.org>"]
 
