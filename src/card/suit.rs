@@ -1,7 +1,9 @@
 use std::error::Error;
 
+use strum_macros::EnumIter;
+
 /// Represents the suit of a playing card in a standard 52-card deck.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, EnumIter)]
 pub enum Suit {
     Club,
     Diamond,

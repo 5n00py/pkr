@@ -11,6 +11,7 @@ pub struct Card {
 }
 
 impl Card {
+    /// Creates a new Card instance with the given rank and suit.
     pub fn new(rank: Rank, suit: Suit) -> Self {
         Self { rank, suit }
     }

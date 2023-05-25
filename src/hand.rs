@@ -1,11 +1,14 @@
 use std::error::Error;
 
-use crate::card::{Card, Rank};
-use crate::card::Suit;
+use crate::card::{Card, Rank, Suit};
+
+// The minimum and maximum number of cards a hand can consist of.
+const MIN_CARDS: usize = 2;
+const MAX_CARDS: usize = 9;
 
 /// Represents a poker hand.
 ///
-/// A poker hand consists of 5 to 7 cards.
+/// A poker hand consists of `MIN_CARDS` to `MAX_CARDS` number of cards.
 pub struct Hand {
     cards: Vec<Card>,
 }
@@ -34,11 +37,16 @@ impl Hand {
     ///
     /// # Errors
     ///
-    /// Returns a `Box<dyn Error>` if the hand does not have between 5 and 7 cards.
+    /// Returns a `Box<dyn Error>` if the hand does not have between `MIN_CARDS`
+    /// and `MAX_CARDS` number of cards.
     pub fn new(cards: Vec<Card>) -> Result<Hand, Box<dyn Error>> {
         let num_cards = cards.len();
-        if num_cards < 5 || num_cards > 7 {
-            return Err("A poker hand must have between 5 and 7 cards.".into());
+        if num_cards < MIN_CARDS || num_cards > MAX_CARDS {
+            return Err(format!(
+                "A poker hand must have between {} and {} cards.", 
+                MIN_CARDS, 
+                MAX_CARDS
+            ).into());
         }
 
         Ok(Hand { cards })
@@ -61,13 +69,17 @@ impl Hand {
     ///
     /// # Errors
     ///
-    /// Returns a `Box<dyn Error>` if the string does not represent a valid hand.
+    /// Returns a `Box<dyn Error>` if the string does not represent a valid hand
+    /// the hand does not have between `MIN_CARDS` and `MAX_CARDS` number of cards.
     pub fn new_from_str(s: &str) -> Result<Self, Box<dyn Error>> {
         let strings: Vec<&str> = s.split_whitespace().collect();
-        if strings.len() < 5 || strings.len() > 7 {
-            return Err("A hand poker hand must have between 5 and 7 cards.".into());
+        if strings.len() < MIN_CARDS || strings.len() > MAX_CARDS {
+            return Err(format!(
+                "A poker hand must have between {} and {} cards.", 
+                MIN_CARDS, 
+                MAX_CARDS
+            ).into());
         }
-
         let mut cards = Vec::new();
         for s in strings {
             let card =
@@ -87,7 +99,7 @@ impl Hand {
     ///
     /// Returns a `Box<dyn Error>` if adding the card would result in more than 7 cards in the hand.
     pub fn add_card(&mut self, new_card: Card) -> Result<(), Box<dyn Error>> {
-        if self.cards.len() + 1 > 7 {
+        if self.cards.len() + 1 > MAX_CARDS {
             return Err("Too many cards in the hand.".into());
         }
         self.cards.push(new_card);
@@ -104,7 +116,7 @@ impl Hand {
     ///
     /// Returns a `Box<dyn Error>` if adding the cards would result in more than 7 cards in the hand.
     pub fn add_cards(&mut self, new_cards: Vec<Card>) -> Result<(), Box<dyn Error>> {
-        if self.cards.len() + new_cards.len() > 7 {
+        if self.cards.len() + new_cards.len() > MAX_CARDS {
             return Err("Too many cards to add.".into());
         }
         for card in new_cards {
@@ -300,7 +312,6 @@ fn test_create_hand() {
 #[test]
 fn test_create_hand_with_wrong_number_of_cards() {
     let cards = vec![
-        Card::new_from_str("2h").unwrap(),
         Card::new_from_str("3d").unwrap(),
     ];
 

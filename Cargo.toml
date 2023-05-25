@@ -6,3 +6,5 @@ authors = ["David Schmid <david.schmid@mailbox.org>"]
 
 [dependencies]
 rand = "0.8.5"
+strum = "0.24"
+strum_macros = "0.24"
