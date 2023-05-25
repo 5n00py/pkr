@@ -51,8 +51,8 @@ pub fn calculate_rank_score(ranks: Vec<Rank>) -> Result<u32, Box<dyn Error>> {
     Ok(score)
 }
 
-/// Gets the ranks of the flush cards in a `hand` in descending order if a flush 
-/// exists or returns None if a hand does not contain a flush.
+/// Gets the ranks of the top 5 flush cards in a `hand` in descending order if 
+/// a flush exists or returns an empty vector if a hand does not contain a flush.
 ///
 /// # Arguments
 ///
@@ -60,17 +60,17 @@ pub fn calculate_rank_score(ranks: Vec<Rank>) -> Result<u32, Box<dyn Error>> {
 ///
 /// # Returns
 ///
-/// * The ranks of the flush cards in descending order if a flush exists or None 
-/// if not.
-fn get_flush_ranks_desc(hand: Hand) -> Option<Vec<Rank>> {
+/// * The ranks of the top 5 flush cards in descending order if a flush exists 
+/// or an empty vector if not.
+fn get_top_five_flush_ranks(hand: Hand) -> Vec<Rank> {
     for suit in Suit::iter() {
         let mut flush_cards = hand.cards_of_suit(suit);
         if flush_cards.len() >= 5 {
             flush_cards.sort_by(|a, b| b.rank.cmp(&a.rank));  // sort flush_cards by rank in descending order
-            return Some(flush_cards.into_iter().map(|card| card.rank).collect());
+            return flush_cards.into_iter().map(|card| card.rank).take(5).collect();
         }
     }
-    None
+    Vec::new()  // return empty Vec if no flush
 }
 
 /// Checks if a vector of `Rank` forms an Ace-low straight.
@@ -155,23 +155,23 @@ mod tests {
     #[test]
     fn test_get_flush_ranks_with_flush() {
         let hand = Hand::new_from_str("2s 4s 6s 8s Ts Ks Qs").unwrap();
-        let flush_ranks = get_flush_ranks_desc(hand).unwrap();
-        assert_eq!(flush_ranks, vec![Rank::King, Rank::Queen, Rank::Ten, Rank::Eight, Rank::Six, Rank::Four, Rank::Two]);
+        let flush_ranks = get_top_five_flush_ranks(hand);
+        assert_eq!(flush_ranks, vec![Rank::King, Rank::Queen, Rank::Ten, Rank::Eight, Rank::Six]);
 
         let hand = Hand::new_from_str("2s 4s 6s 8s Ts Ks Qc").unwrap();
-        let flush_ranks = get_flush_ranks_desc(hand).unwrap();
-        assert_eq!(flush_ranks, vec![Rank::King, Rank::Ten, Rank::Eight, Rank::Six, Rank::Four, Rank::Two]);
+        let flush_ranks = get_top_five_flush_ranks(hand);
+        assert_eq!(flush_ranks, vec![Rank::King, Rank::Ten, Rank::Eight, Rank::Six, Rank::Four]);
 
         let hand = Hand::new_from_str("2s 4s 6s 8s Ts Ks Kc").unwrap();
-        let flush_ranks = get_flush_ranks_desc(hand).unwrap();
-        assert_eq!(flush_ranks, vec![Rank::King, Rank::Ten, Rank::Eight, Rank::Six, Rank::Four, Rank::Two]);
+        let flush_ranks = get_top_five_flush_ranks(hand);
+        assert_eq!(flush_ranks, vec![Rank::King, Rank::Ten, Rank::Eight, Rank::Six, Rank::Four]);
 
     }
 
     #[test]
     fn test_get_flush_ranks_without_flush() {
         let hand = Hand::new_from_str("2s 4s 6s 8d Td Kd Qs").unwrap();
-        assert!(get_flush_ranks_desc(hand).is_none());
+        assert!(get_top_five_flush_ranks(hand).is_empty());
     }
 
     #[test]
