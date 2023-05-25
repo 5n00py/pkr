@@ -3,6 +3,25 @@ use strum::IntoEnumIterator;
 use crate::card::{ Rank, Suit };
 use crate::hand::Hand;
 
+/// An enumeration representing the rank of a poker hand.
+///
+/// Each variant corresponds to a different type of hand in poker. The numerical 
+/// values assigned to each variant represent their relative strength, with a 
+/// higher number indicating a stronger hand. These values can be used to compare 
+/// hands and determine the winner in a game of poker.
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
+pub enum HandRank {
+    HighCard = 0,
+    OnePair = 1_000_000,
+    TwoPair = 2_000_000,
+    ThreeOfAKind = 3_000_000,
+    Straight = 4_000_000,
+    Flush = 5_000_000,
+    FullHouse = 6_000_000,
+    FourOfAKind = 7_000_000,
+    StraightFlush = 8_000_000,
+    RoyalFlush = 9_000_000,
+}
 
 /// Calculates the score from a set of card ranks.
 ///
@@ -43,6 +62,36 @@ pub fn calculate_rank_score(ranks: Vec<Rank>) -> u32 {
     }
 
     score
+}
+
+/// Evaluates the rank of a poker hand for a Flush.
+///
+/// This function determines whether a given hand is a Flush and calculates 
+/// its score. The score is a combination of the HandRank value for a Flush and 
+/// the rank scores of the top five cards in the flush suit.
+///
+/// Note that this function is not exclusive in its check; a hand evaluated by 
+/// this function could still potentially satisfy a higher rank like a Straight 
+/// Flush.
+///
+/// # Arguments
+///
+/// * `hand` - A hand of cards.
+///
+/// # Returns
+///
+/// * A `u32` score if the hand conatins a Flush or 0 if it does not contain a 
+/// Flush.
+fn evaluate_flush(hand: Hand) -> u32 {
+    let flush_ranks = get_flush_ranks_desc(hand);
+    
+    if flush_ranks.is_empty() {
+        return 0;
+    } else {
+        let flush_ranks_five = &flush_ranks[0..5];
+        let score = calculate_rank_score(flush_ranks_five.to_vec());
+        return score + HandRank::Flush as u32;
+    }
 }
 
 /// Gets the ranks of the flush cards in a `hand` in descending order if a flush 
@@ -143,6 +192,37 @@ mod tests {
         // check empty list of ranks
         let result = calculate_rank_score(vec![]);
         assert_eq!(result, 0);
+    }
+
+    #[test]
+    fn test_evaluate_flush() {
+        let hand = Hand::new_from_str("2s 4s 6s 8s Ts Ks Qs").unwrap();
+        let flush_score = evaluate_flush(hand);
+        let expected_score = 5000000 + (13 << 16) + (12 << 12) + (10 << 8) + (8 << 4) + 6;
+        assert_eq!(flush_score, expected_score);
+
+        let hand = Hand::new_from_str("2s 2h 6s 8s Ts Ks Kd").unwrap();
+        let flush_score = evaluate_flush(hand);
+        let expected_score = 5000000 + (13 << 16) + (10 << 12) + (8 << 8) + (6 << 4) + 2;
+        assert_eq!(flush_score, expected_score);
+
+        let hand = Hand::new_from_str("2s 4s 6s 8s Ts Kh Ad").unwrap();
+        let flush_score = evaluate_flush(hand);
+        let expected_score = 5000000 + (10 << 16) + (8 << 12) + (6 << 8) + (4 << 4) + 2;
+        assert_eq!(flush_score, expected_score);
+
+        let hand = Hand::new_from_str("As 2s 3s 4s 5s Kd Qd").unwrap();
+        let flush_score = evaluate_flush(hand);
+        let expected_score = 5000000 + (14 << 16) + (5 << 12) + (4 << 8) + (3 << 4) + 2;
+        assert_eq!(flush_score, expected_score);
+
+        let hand = Hand::new_from_str("2s 4s 6s 8d Td Kd Qs").unwrap();
+        let flush_score = evaluate_flush(hand);
+        assert_eq!(flush_score, 0);
+
+        let hand = Hand::new_from_str("2s 4s 6s 8s").unwrap();
+        let flush_score = evaluate_flush(hand);
+        assert_eq!(flush_score, 0);
     }
 
     #[test]
