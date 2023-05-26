@@ -1,4 +1,5 @@
 pub mod evaluator;
 
-mod score;
 mod flush;
+mod score;
+mod straight;

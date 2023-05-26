@@ -1,3 +1,5 @@
+use crate::card::Rank;
+
 /// An enumeration representing the rank of a poker hand.
 ///
 /// Each variant corresponds to a different type of hand in poker. The numerical 
@@ -59,4 +61,51 @@ pub fn calculate_rank_score(ranks: Vec<Rank>) -> u32 {
     score
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn test_calculate_rank_score() {
+        // check non-empty list of ranks
+        let ranks = vec![Rank::Ace, Rank::Ace, Rank::Ace, Rank::Ace, Rank::King];
+        assert_eq!(calculate_rank_score(ranks), 978669);
+        
+        let ranks = vec![Rank::Ace, Rank::Ace, Rank::Ace, Rank::Ace, Rank::Queen];
+        assert_eq!(calculate_rank_score(ranks), 978668);
 
+        let ranks = vec![Rank::Ace, Rank::King, Rank::Queen, Rank::Jack, Rank::Ten];
+        assert_eq!(calculate_rank_score(ranks), 974010);
+
+        let ranks = vec![Rank::Ace, Rank::King, Rank::Queen, Rank::Jack, Rank::Nine];
+        assert_eq!(calculate_rank_score(ranks), 974009);
+
+        let score = calculate_rank_score(vec![Rank::Ace, Rank::King, Rank::Queen]);
+        assert_eq!(score, 0b1110_1101_1100);
+
+        let score = calculate_rank_score(vec![Rank::Two, Rank::Three, Rank::Four]);
+        assert_eq!(score, 0b0010_0011_0100);
+
+        let score = calculate_rank_score(vec![Rank::Ten, Rank::Nine, Rank::Eight]);
+        assert_eq!(score, 0b1010_1001_1000);
+
+        // check single rank
+        let score = calculate_rank_score(vec![Rank::Ace]);
+        assert_eq!(score, 14);
+        
+        // check ranks out of order
+        let score = calculate_rank_score(vec![Rank::Two, Rank::Ace, Rank::Three]);
+        assert_eq!(score, 0b0010_1110_0011);
+        
+        // check with duplicates
+        let score = calculate_rank_score(vec![Rank::Ace, Rank::Ace, Rank::King]);
+        assert_eq!(score, 0b1110_1110_1101);
+    }
+
+    #[test]
+    fn test_calculate_rank_score_empty() {
+        // check empty list of ranks
+        let result = calculate_rank_score(vec![]);
+        assert_eq!(result, 0);
+    }
+}
