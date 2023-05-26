@@ -1,9 +1,9 @@
 use crate::hand::Hand;
 
-use super::flush::get_flush_ranks;
+use super::flush::find_flush;
 use super::four_of_a_kind::find_four_of_a_kind;
 use super::score::{calculate_hand_score, HandRank};
-use super::straight::get_straight_rank_from_desc_nodup;
+use super::straight::find_straight_from_desc_nodup;
 
 // This function evaluates the given Hand and returns its score as an unsigned 32-bit integer.
 pub fn evaluate(hand: &Hand) -> u32 {
@@ -19,10 +19,10 @@ pub fn evaluate(hand: &Hand) -> u32 {
     // flush.
     // Moreover, if a hand is a flush but the check for a straight flush fails,
     // we can still utilize the result (that it's a flush) for scoring later.
-    let flush_ranks_desc = get_flush_ranks(&hand_desc);
+    let flush_ranks_desc = find_flush(&hand_desc);
 
     if let Some(flush_ranks) = flush_ranks_desc {
-        let straight_rank_opt = get_straight_rank_from_desc_nodup(flush_ranks);
+        let straight_rank_opt = find_straight_from_desc_nodup(flush_ranks);
 
         // If straight_rank_opt is Some, meaning a straight flush is found,
         // then calculate and return the hand score for a straight flush.
