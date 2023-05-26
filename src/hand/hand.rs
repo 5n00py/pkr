@@ -9,6 +9,7 @@ const MAX_CARDS: usize = 9;
 /// Represents a poker hand.
 ///
 /// A poker hand consists of `MIN_CARDS` to `MAX_CARDS` number of cards.
+#[derive(Clone)]
 pub struct Hand {
     cards: Vec<Card>,
 }

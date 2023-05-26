@@ -14,7 +14,7 @@ use crate::hand::Hand;
 ///
 /// * The ranks of the flush cards in the order they were passed if a flush exists or None
 ///   if not.
-fn get_flush_ranks(hand: Hand) -> Option<Vec<Rank>> {
+pub fn get_flush_ranks(hand: Hand) -> Option<Vec<Rank>> {
     for suit in Suit::iter() {
         let flush_cards = hand.cards_of_suit(suit);
         if flush_cards.len() >= 5 {
@@ -28,7 +28,7 @@ fn get_flush_ranks(hand: Hand) -> Option<Vec<Rank>> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::card::{Suit, Rank};
+    use crate::card::Rank;
     use crate::hand::Hand;
 
     #[test]
