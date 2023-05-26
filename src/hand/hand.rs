@@ -2,6 +2,8 @@ use std::error::Error;
 
 use crate::card::{Card, Rank, Suit};
 
+use super::evaluator::evaluator::evaluate;
+
 // The minimum and maximum number of cards a hand can consist of.
 const MIN_CARDS: usize = 2;
 const MAX_CARDS: usize = 9;
@@ -134,6 +136,11 @@ impl Hand {
     /// Returns the number of cards in the hand.
     pub fn get_count(&self) -> usize {
         self.cards.len()
+    }
+
+
+    pub fn get_score(&self) -> u32 {
+        evaluate(self)
     }
 
     /// Returns the ranks of all cards in the hand, ignoring the suits.
@@ -318,4 +325,54 @@ fn test_create_hand_with_wrong_number_of_cards() {
 
     let result = Hand::new(cards);
     assert!(result.is_err());
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_straight_flushes() {
+        let hand = Hand::new_from_str("2s As Js Ks Qs 9c Ts").unwrap();        
+        let score = hand.get_score();
+        assert_eq!(score, 8_000_000 + 14);
+
+        let hand = Hand::new_from_str("2s Kc Js Ks Qs 9s Ts").unwrap();
+       let score = hand.get_score();
+
+        assert_eq!(score, 8_000_000 + 13);
+
+        let hand = Hand::new_from_str("9h 8h Jc Tc Qh Jh Th").unwrap();
+       let score = hand.get_score();
+        assert_eq!(score, 8_000_000 + 12);
+
+        let hand = Hand::new_from_str("2s 7s Js 9s 8s 9c Ts").unwrap();
+       let score = hand.get_score();
+        assert_eq!(score, 8_000_000 + 11);
+
+        let hand = Hand::new_from_str("9d 8d Td 7d 6d 3c Th Kh Qd").unwrap();
+       let score = hand.get_score();
+        assert_eq!(score, 8_000_000 + 10);
+
+        let hand = Hand::new_from_str("9d 8d 5d 6d 7d").unwrap();
+       let score = hand.get_score();
+        assert_eq!(score, 8_000_000 + 9);
+
+        let hand = Hand::new_from_str("4c 5c 6c 7c 8c 3c 2c").unwrap();
+       let score = hand.get_score();
+        assert_eq!(score, 8_000_000 + 8);
+        
+        let hand = Hand::new_from_str("7d 7c 7s 6d 5d 3d 4d").unwrap();
+       let score = hand.get_score();
+        assert_eq!(score, 8_000_000 + 7);
+
+        let hand = Hand::new_from_str("6d 5d 4d 3d 2d Ad").unwrap();
+       let score = hand.get_score();
+        assert_eq!(score, 8_000_000 + 6);
+
+
+        let hand = Hand::new_from_str("2d Ad 3d 4d 5d 3c Th").unwrap();
+       let score = hand.get_score();
+        assert_eq!(score, 8_000_000 + 5);
+    }
 }

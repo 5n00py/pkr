@@ -72,20 +72,17 @@ pub fn calculate_hand_score(ranks: Vec<Rank>, hand_rank: HandRank) -> u32 {
 ///
 /// * The score of the ranks as an u32 integer. 
 ///   If the list of ranks is empty, returns 0.
-fn calculate_rank_score(mut ranks: Vec<Rank>) -> u32 {
+fn calculate_rank_score(ranks: Vec<Rank>) -> u32 {
     // If ranks vector contains less than 5 ranks, resize it to 5
     // filling with Rank::Two (which corresponds to zero value as per your requirement).
     if ranks.is_empty() {
         return 0;
     }
-    if ranks.len() < 5 {
-        ranks.resize(5, Rank::Two);  // Assuming 'Rank::Two' corresponds to "0" value
-    }
-
+    
     let mut score: u32 = 0;
 
     // Evaluate only the first five ranks
-    for rank in ranks.into_iter().take(5) {
+    for rank in ranks.into_iter() {
         score = (score << 4) | (rank as u32);
     }
 
@@ -112,21 +109,21 @@ mod tests {
         assert_eq!(calculate_rank_score(ranks), 974009);
 
         let score = calculate_rank_score(vec![Rank::Ace, Rank::King, Rank::Queen]);
-        assert_eq!(score, 0b1110_1101_1100_0010_0010);
+        assert_eq!(score, 0b1110_1101_1100);
 
         let score = calculate_rank_score(vec![Rank::Two, Rank::Three, Rank::Four]);
-        assert_eq!(score, 0b0010_0011_0100_0010_0010);
+        assert_eq!(score, 0b0010_0011_0100);
 
         let score = calculate_rank_score(vec![Rank::Ten, Rank::Nine, Rank::Eight]);
-        assert_eq!(score, 0b1010_1001_1000_0010_0010);
+        assert_eq!(score, 0b1010_1001_1000);
 
         // check ranks out of order
         let score = calculate_rank_score(vec![Rank::Two, Rank::Ace, Rank::Three]);
-        assert_eq!(score, 0b0010_1110_0011_0010_0010);
+        assert_eq!(score, 0b0010_1110_0011);
         
         // check with duplicates
         let score = calculate_rank_score(vec![Rank::Ace, Rank::Ace, Rank::King]);
-        assert_eq!(score, 0b1110_1110_1101_0010_0010);
+        assert_eq!(score, 0b1110_1110_1101);
     }
 
     #[test]
