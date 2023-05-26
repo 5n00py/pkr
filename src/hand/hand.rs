@@ -46,10 +46,10 @@ impl Hand {
         let num_cards = cards.len();
         if num_cards < MIN_CARDS || num_cards > MAX_CARDS {
             return Err(format!(
-                "A poker hand must have between {} and {} cards.", 
-                MIN_CARDS, 
-                MAX_CARDS
-            ).into());
+                "A poker hand must have between {} and {} cards.",
+                MIN_CARDS, MAX_CARDS
+            )
+            .into());
         }
 
         Ok(Hand { cards })
@@ -78,15 +78,14 @@ impl Hand {
         let strings: Vec<&str> = s.split_whitespace().collect();
         if strings.len() < MIN_CARDS || strings.len() > MAX_CARDS {
             return Err(format!(
-                "A poker hand must have between {} and {} cards.", 
-                MIN_CARDS, 
-                MAX_CARDS
-            ).into());
+                "A poker hand must have between {} and {} cards.",
+                MIN_CARDS, MAX_CARDS
+            )
+            .into());
         }
         let mut cards = Vec::new();
         for s in strings {
-            let card =
-                Card::new_from_str(s).map_err(|_| format!("Invalid card string: {}", s))?;
+            let card = Card::new_from_str(s).map_err(|_| format!("Invalid card string: {}", s))?;
             cards.push(card);
         }
         Ok(Hand { cards })
@@ -137,7 +136,6 @@ impl Hand {
     pub fn get_count(&self) -> usize {
         self.cards.len()
     }
-
 
     pub fn get_score(&self) -> u32 {
         evaluate(self)
@@ -234,7 +232,7 @@ impl Hand {
     ///
     /// # Arguments
     ///
-    /// * `ascending` - A boolean indicating if sorting should be in ascending 
+    /// * `ascending` - A boolean indicating if sorting should be in ascending
     ///                 order (true) or descending order (false).
     ///
     /// # Errors
@@ -319,9 +317,7 @@ fn test_create_hand() {
 
 #[test]
 fn test_create_hand_with_wrong_number_of_cards() {
-    let cards = vec![
-        Card::new_from_str("3d").unwrap(),
-    ];
+    let cards = vec![Card::new_from_str("3d").unwrap()];
 
     let result = Hand::new(cards);
     assert!(result.is_err());
@@ -333,68 +329,67 @@ mod tests {
 
     #[test]
     fn test_straight_flushes() {
-        let hand = Hand::new_from_str("2s As Js Ks Qs 9c Ts").unwrap();        
+        let hand = Hand::new_from_str("2s As Js Ks Qs 9c Ts").unwrap();
         let score = hand.get_score();
         assert_eq!(score, 8_000_000 + 14);
 
         let hand = Hand::new_from_str("2s Kc Js Ks Qs 9s Ts").unwrap();
-       let score = hand.get_score();
+        let score = hand.get_score();
 
         assert_eq!(score, 8_000_000 + 13);
 
         let hand = Hand::new_from_str("9h 8h Jc Tc Qh Jh Th").unwrap();
-       let score = hand.get_score();
+        let score = hand.get_score();
         assert_eq!(score, 8_000_000 + 12);
 
         let hand = Hand::new_from_str("2s 7s Js 9s 8s 9c Ts").unwrap();
-       let score = hand.get_score();
+        let score = hand.get_score();
         assert_eq!(score, 8_000_000 + 11);
 
         let hand = Hand::new_from_str("9d 8d Td 7d 6d 3c Th Kh Qd").unwrap();
-       let score = hand.get_score();
+        let score = hand.get_score();
         assert_eq!(score, 8_000_000 + 10);
 
         let hand = Hand::new_from_str("9d 8d 5d 6d 7d").unwrap();
-       let score = hand.get_score();
+        let score = hand.get_score();
         assert_eq!(score, 8_000_000 + 9);
 
         let hand = Hand::new_from_str("4c 5c 6c 7c 8c 3c 2c").unwrap();
-       let score = hand.get_score();
+        let score = hand.get_score();
         assert_eq!(score, 8_000_000 + 8);
-        
+
         let hand = Hand::new_from_str("7d 7c 7s 6d 5d 3d 4d").unwrap();
-       let score = hand.get_score();
+        let score = hand.get_score();
         assert_eq!(score, 8_000_000 + 7);
 
         let hand = Hand::new_from_str("6d 5d 4d 3d 2d Ad").unwrap();
-       let score = hand.get_score();
+        let score = hand.get_score();
         assert_eq!(score, 8_000_000 + 6);
 
-
         let hand = Hand::new_from_str("2d Ad 3d 4d 5d 3c Th").unwrap();
-       let score = hand.get_score();
+        let score = hand.get_score();
         assert_eq!(score, 8_000_000 + 5);
     }
 
     #[test]
     fn test_four_of_a_kind() {
-        let hand = Hand::new_from_str("As Ac Ad Ah Ts 9c Qs").unwrap();        
+        let hand = Hand::new_from_str("As Ac Ad Ah Ts 9c Qs").unwrap();
         let score = hand.get_score();
         assert_eq!(score, 7_000_000 + (14 << 4) + 12);
 
-        let hand = Hand::new_from_str("As Ac Ad Ah").unwrap();        
+        let hand = Hand::new_from_str("As Ac Ad Ah").unwrap();
         let score = hand.get_score();
         assert_eq!(score, 7_000_000 + (14 << 4) + 1);
 
-        let hand = Hand::new_from_str("9c Ks Kc Kd Kh Ts 2s").unwrap();        
+        let hand = Hand::new_from_str("9c Ks Kc Kd Kh Ts 2s").unwrap();
         let score = hand.get_score();
         assert_eq!(score, 7_000_000 + (13 << 4) + 10);
 
-        let hand = Hand::new_from_str("Qs Qc Qd Qh 8s 9c 9s").unwrap();        
+        let hand = Hand::new_from_str("Qs Qc Qd Qh 8s 9c 9s").unwrap();
         let score = hand.get_score();
         assert_eq!(score, 7_000_000 + (12 << 4) + 9);
 
-        let hand = Hand::new_from_str("2s 2c 2d 2h As 9c Qs").unwrap();        
+        let hand = Hand::new_from_str("2s 2c 2d 2h As 9c Qs").unwrap();
         let score = hand.get_score();
         assert_eq!(score, 7_000_000 + (2 << 4) + 14);
     }

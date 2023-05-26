@@ -29,7 +29,7 @@ impl Suit {
     ///
     /// # Errors
     ///
-    /// Returns an `Box<dyn std::error::Error>` if the string does not match 
+    /// Returns an `Box<dyn std::error::Error>` if the string does not match
     /// any suit.
     pub fn new_from_str(s: &str) -> Result<Self, Box<dyn std::error::Error>> {
         match s {

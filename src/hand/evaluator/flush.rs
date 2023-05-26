@@ -1,9 +1,9 @@
 use strum::IntoEnumIterator;
 
-use crate::card::{Rank, Suit };
+use crate::card::{Rank, Suit};
 use crate::hand::Hand;
 
-/// Gets the ranks of the flush cards in a `hand` in the order they were passed 
+/// Gets the ranks of the flush cards in a `hand` in the order they were passed
 /// if a flush exists or returns None if a hand does not contain a flush.
 ///
 /// # Arguments
@@ -24,7 +24,6 @@ pub fn get_flush_ranks(hand: &Hand) -> Option<Vec<Rank>> {
     None
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -35,11 +34,17 @@ mod tests {
     fn test_get_flush_ranks_with_flush() {
         let hand = Hand::new_from_str("As Ks Qs Js Ts").unwrap();
         let result = get_flush_ranks(&hand).unwrap();
-        assert_eq!(result, vec![Rank::Ace, Rank::King, Rank::Queen, Rank::Jack, Rank::Ten]);
+        assert_eq!(
+            result,
+            vec![Rank::Ace, Rank::King, Rank::Queen, Rank::Jack, Rank::Ten]
+        );
 
         let hand = Hand::new_from_str("Ks Kd Qc Js Ts 9s As").unwrap();
         let result = get_flush_ranks(&hand).unwrap();
-        assert_eq!(result, vec![Rank::King, Rank::Jack, Rank::Ten, Rank::Nine, Rank::Ace]);
+        assert_eq!(
+            result,
+            vec![Rank::King, Rank::Jack, Rank::Ten, Rank::Nine, Rank::Ace]
+        );
     }
 
     #[test]
@@ -49,4 +54,3 @@ mod tests {
         assert!(result.is_none());
     }
 }
-

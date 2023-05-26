@@ -35,7 +35,7 @@ impl Card {
     ///
     /// # Errors
     ///
-    /// Returns a `Box<dyn Error>` if the string does not match any card, the 
+    /// Returns a `Box<dyn Error>` if the string does not match any card, the
     /// rank or the suit are invalid.
     pub fn new_from_str(s: &str) -> Result<Self, Box<dyn Error>> {
         if s.len() != 2 {
