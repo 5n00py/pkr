@@ -375,4 +375,27 @@ mod tests {
        let score = hand.get_score();
         assert_eq!(score, 8_000_000 + 5);
     }
+
+    #[test]
+    fn test_four_of_a_kind() {
+        let hand = Hand::new_from_str("As Ac Ad Ah Ts 9c Qs").unwrap();        
+        let score = hand.get_score();
+        assert_eq!(score, 7_000_000 + (14 << 4) + 12);
+
+        let hand = Hand::new_from_str("As Ac Ad Ah").unwrap();        
+        let score = hand.get_score();
+        assert_eq!(score, 7_000_000 + (14 << 4) + 1);
+
+        let hand = Hand::new_from_str("9c Ks Kc Kd Kh Ts 2s").unwrap();        
+        let score = hand.get_score();
+        assert_eq!(score, 7_000_000 + (13 << 4) + 10);
+
+        let hand = Hand::new_from_str("Qs Qc Qd Qh 8s 9c 9s").unwrap();        
+        let score = hand.get_score();
+        assert_eq!(score, 7_000_000 + (12 << 4) + 9);
+
+        let hand = Hand::new_from_str("2s 2c 2d 2h As 9c Qs").unwrap();        
+        let score = hand.get_score();
+        assert_eq!(score, 7_000_000 + (2 << 4) + 14);
+    }
 }

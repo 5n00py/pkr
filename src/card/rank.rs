@@ -3,7 +3,8 @@ use std::error::Error;
 /// Represents the rank of a playing card in a standard 52-card deck.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Rank {
-    Two = 2,
+    AceLow = 1,
+    Two,
     Three,
     Four,
     Five,
@@ -103,6 +104,7 @@ impl Rank {
     /// ```
     pub fn as_str(&self) -> &'static str {
         match self {
+            Rank::AceLow => "A",
             Rank::Two => "2",
             Rank::Three => "3",
             Rank::Four => "4",
@@ -122,6 +124,7 @@ impl Rank {
     /// Returns the numerical value of a card's rank.
     pub fn as_num(&self) -> u32 {
         match self {
+            Rank::AceLow => 1,
             Rank::Two => 2,
             Rank::Three => 3,
             Rank::Four => 4,
