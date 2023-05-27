@@ -2,6 +2,7 @@ use crate::hand::Hand;
 
 use super::flush::find_flush;
 use super::four_of_a_kind::find_four_of_a_kind;
+use super::full_house::find_full_house;
 use super::score::{calculate_hand_score, HandRank};
 use super::straight::find_straight_from_desc_nodup;
 
@@ -11,7 +12,7 @@ pub fn evaluate(hand: &Hand) -> u32 {
     // the original. We sort the copied hand by rank in descending order.
     // This is to facilitate the identification of hand ranks.
     let mut hand_desc = hand.clone();
-    hand_desc.sort_by_rank(false);
+    hand_desc.sort_by_rank(false).expect("Failed to sort by rank");
 
     // Check if the hand contains a flush. This check is performed before
     // checking for a straight flush for performance reasons.
@@ -21,8 +22,8 @@ pub fn evaluate(hand: &Hand) -> u32 {
     // we can still utilize the result (that it's a flush) for scoring later.
     let flush_ranks_desc = find_flush(&hand_desc);
 
-    if let Some(flush_ranks) = flush_ranks_desc {
-        let straight_rank_opt = find_straight_from_desc_nodup(flush_ranks);
+    if let Some(flush_ranks) = &flush_ranks_desc {
+        let straight_rank_opt = find_straight_from_desc_nodup(flush_ranks.clone());
 
         // If straight_rank_opt is Some, meaning a straight flush is found,
         // then calculate and return the hand score for a straight flush.
@@ -41,17 +42,32 @@ pub fn evaluate(hand: &Hand) -> u32 {
     // If the straight check is later needed, the deduplicated ranks are ready for use.
     let mut ranks_desc_no_dup = rank_desc.clone();
     ranks_desc_no_dup.dedup();
-
     let num_duplicates = rank_desc.len() - ranks_desc_no_dup.len();
 
     if num_duplicates > 2 {
         // Check for a four of a kind in the hand by passing the ranks (in descending order)
         // to the function `find_four_of_a_kind`, which returns an Option.
-        if let Some(four_of_a_kind) = find_four_of_a_kind(rank_desc) {
+        if let Some(four_of_a_kind) = find_four_of_a_kind(rank_desc.clone()) {
             // If a four of a kind is found (i.e., the result is not None),
             // calculate the hand score using the vector result and the FourOfAKind HandRank.
             return calculate_hand_score(four_of_a_kind, HandRank::FourOfAKind);
         }
+
+        // Check for a full house in the hand by passing the ranks (in descending order)
+        // to the function `find_full_house`, which also returns an Option.
+        if let Some(full_house) = find_full_house(&rank_desc) {
+            // If a full house is found (i.e., the result is not None),
+            // calculate the hand score using the vector result and the FullHouse HandRank.
+            return calculate_hand_score(full_house, HandRank::FullHouse);
+        }
+    }
+
+    // If none of the higher hands have been found and there are at least 5 
+    // cards in the flush then we can finally move the flush_ranks desc out... ;-)
+    if let Some(ref flush_ranks_desc) = flush_ranks_desc {
+        // Use the first five cards to form a Flush
+        let flush_ranks = &flush_ranks_desc[0..5];
+        return calculate_hand_score(flush_ranks.to_vec(), HandRank::Flush);
     }
 
     return 0;
