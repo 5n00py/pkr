@@ -4,7 +4,7 @@ use super::flush::find_flush;
 use super::four_of_a_kind::find_four_of_a_kind;
 use super::full_house::find_full_house;
 use super::score::{calculate_hand_score, HandRank};
-use super::straight::find_straight_from_desc_nodup;
+use super::straight::find_straight;
 
 // This function evaluates the given Hand and returns its score as an unsigned 32-bit integer.
 pub fn evaluate(hand: &Hand) -> u32 {
@@ -25,12 +25,12 @@ pub fn evaluate(hand: &Hand) -> u32 {
     let flush_ranks_desc = find_flush(&hand_desc);
 
     if let Some(flush_ranks) = &flush_ranks_desc {
-        let straight_rank_opt = find_straight_from_desc_nodup(flush_ranks.clone());
+        let straight_flush_rank_opt = find_straight(flush_ranks.clone());
 
-        // If straight_rank_opt is Some, meaning a straight flush is found,
+        // If straight_flush_rank_opt is Some, meaning a straight flush is found,
         // then calculate and return the hand score for a straight flush.
-        if let Some(straight_rank) = straight_rank_opt {
-            return calculate_hand_score(vec![straight_rank], HandRank::StraightFlush);
+        if let Some(straight_flush_rank) = straight_flush_rank_opt {
+            return calculate_hand_score(vec![straight_flush_rank], HandRank::StraightFlush);
         }
     }
 
@@ -47,19 +47,23 @@ pub fn evaluate(hand: &Hand) -> u32 {
     let num_duplicates = rank_desc.len() - ranks_desc_no_dup.len();
 
     if num_duplicates > 2 {
-        // Check for a four of a kind in the hand by passing the ranks (in descending order)
-        // to the function `find_four_of_a_kind`, which returns an Option.
+        // Check for a four of a kind in the hand by passing the ranks (in 
+        // descending order) to the function `find_four_of_a_kind`, which 
+        // returns an Option.
         if let Some(four_of_a_kind) = find_four_of_a_kind(rank_desc.clone()) {
             // If a four of a kind is found (i.e., the result is not None),
-            // calculate the hand score using the vector result and the FourOfAKind HandRank.
+            // calculate the hand score using the vector result and the 
+            // FourOfAKind HandRank.
             return calculate_hand_score(four_of_a_kind, HandRank::FourOfAKind);
         }
 
-        // Check for a full house in the hand by passing the ranks (in descending order)
-        // to the function `find_full_house`, which also returns an Option.
+        // Check for a full house in the hand by passing the ranks (in 
+        // descending order) to the function `find_full_house`, which also 
+        // returns an Option.
         if let Some(full_house) = find_full_house(&rank_desc) {
             // If a full house is found (i.e., the result is not None),
-            // calculate the hand score using the vector result and the FullHouse HandRank.
+            // calculate the hand score using the vector result and the 
+            // FullHouse HandRank.
             return calculate_hand_score(full_house, HandRank::FullHouse);
         }
     }
@@ -71,6 +75,13 @@ pub fn evaluate(hand: &Hand) -> u32 {
         let flush_ranks = &flush_ranks_desc[0..5];
         return calculate_hand_score(flush_ranks.to_vec(), HandRank::Flush);
     }
+
+    let straight_rank_opt = find_straight(ranks_desc_no_dup.clone());
+        // If straight_rank_opt is Some, meaning a straight is found,
+        // then calculate and return the hand score for a straight flush.
+        if let Some(straight_rank) = straight_rank_opt {
+            return calculate_hand_score(vec![straight_rank], HandRank::Straight);
+        }
 
     return 0;
 }
