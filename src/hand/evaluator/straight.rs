@@ -29,4 +29,3 @@ pub fn find_straight_from_desc_nodup(mut ranks_desc: Vec<Rank>) -> Option<Rank> 
 
     return None;
 }
-

@@ -12,7 +12,9 @@ pub fn evaluate(hand: &Hand) -> u32 {
     // the original. We sort the copied hand by rank in descending order.
     // This is to facilitate the identification of hand ranks.
     let mut hand_desc = hand.clone();
-    hand_desc.sort_by_rank(false).expect("Failed to sort by rank");
+    hand_desc
+        .sort_by_rank(false)
+        .expect("Failed to sort by rank");
 
     // Check if the hand contains a flush. This check is performed before
     // checking for a straight flush for performance reasons.
@@ -62,7 +64,7 @@ pub fn evaluate(hand: &Hand) -> u32 {
         }
     }
 
-    // If none of the higher hands have been found and there are at least 5 
+    // If none of the higher hands have been found and there are at least 5
     // cards in the flush then we can finally move the flush_ranks desc out... ;-)
     if let Some(ref flush_ranks_desc) = flush_ranks_desc {
         // Use the first five cards to form a Flush

@@ -421,7 +421,10 @@ mod tests {
     fn test_flush() {
         let hand = Hand::new_from_str("As Ks Qs Js 9s 8s 7s").unwrap();
         let score = hand.get_score();
-        assert_eq!(score, 5_000_000 + (14 << 16) + (13 << 12) + (12 << 8) + (11 << 4) + 9);
+        assert_eq!(
+            score,
+            5_000_000 + (14 << 16) + (13 << 12) + (12 << 8) + (11 << 4) + 9
+        );
 
         // Check corner case vs. lowest full house
         let hand = Hand::new_from_str("2s 2c 2d 3h As 3c Qs").unwrap();
@@ -430,14 +433,23 @@ mod tests {
 
         let hand = Hand::new_from_str("Ks Kd Qs Js 9s 9d 7s").unwrap();
         let score = hand.get_score();
-        assert_eq!(score, 5_000_000 + (13 << 16) + (12 << 12) + (11 << 8) + (9 << 4) + 7);
+        assert_eq!(
+            score,
+            5_000_000 + (13 << 16) + (12 << 12) + (11 << 8) + (9 << 4) + 7
+        );
 
         let hand = Hand::new_from_str("Qs Js 9s 8s 7s").unwrap();
         let score = hand.get_score();
-        assert_eq!(score, 5_000_000 + (12 << 16) + (11 << 12) + (9 << 8) + (8 << 4) + 7);
+        assert_eq!(
+            score,
+            5_000_000 + (12 << 16) + (11 << 12) + (9 << 8) + (8 << 4) + 7
+        );
 
         let hand = Hand::new_from_str("7s Kd Qd 4s 5s 3s 2s").unwrap();
         let score = hand.get_score();
-        assert_eq!(score, 5_000_000 + (7 << 16) + (5 << 12) + (4 << 8) + (3 << 4) + 2);
+        assert_eq!(
+            score,
+            5_000_000 + (7 << 16) + (5 << 12) + (4 << 8) + (3 << 4) + 2
+        );
     }
 }
