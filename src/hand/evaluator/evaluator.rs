@@ -16,7 +16,7 @@ pub fn evaluate(hand: &Hand) -> u32 {
     let mut hand_desc = hand.clone();
     hand_desc
         .sort_by_rank(false)
-        .expect("Failed to sort by rank");
+        .expect("Evaluate failed to sort by rank");
 
     // Check if the hand contains a flush. This check is performed before
     // checking for a straight flush for performance reasons.
@@ -95,6 +95,9 @@ pub fn evaluate(hand: &Hand) -> u32 {
         if let Some(two_pair) = two_pair_opt {
             return calculate_hand_score(two_pair, HandRank::TwoPair);
         }
+
+        // Panic if no three of a kind or two pair is found
+        panic!("Unexpected behavior in hand evaluation: No paired hand found but expected.");
     }
     return 0;
 }
