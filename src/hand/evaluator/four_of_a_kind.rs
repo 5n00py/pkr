@@ -15,14 +15,11 @@ use crate::card::Rank;
 /// # Arguments
 ///
 /// * `mut ranks` - A mutable vector of Rank representing the ranks of a hand of cards in descending order.
-pub fn find_four_of_a_kind(mut ranks: Vec<Rank>) -> Option<Vec<Rank>> {
-    if ranks.len() < 4 {
-        return None;
-    }
+pub fn find_four_of_a_kind(ranks: &Vec<Rank>) -> Option<Vec<Rank>> {
+    let ranks_len = ranks.len();
 
-    // If we have a four of a kind but no kicker, add a placeholder (Ace_low) as a kicker
-    if ranks.len() == 4 {
-        ranks.push(Rank::AceLow);
+    if ranks_len < 4 {
+        return None;
     }
 
     for i in 0..(ranks.len() - 3) {
@@ -31,13 +28,14 @@ pub fn find_four_of_a_kind(mut ranks: Vec<Rank>) -> Option<Vec<Rank>> {
             let mut four_of_a_kind: Vec<Rank> = Vec::new();
             four_of_a_kind.push(ranks[i]);
 
-            // Find the highest card that is not part of the four of a kind
-            let kicker = ranks.iter().filter(|&&rank| rank != ranks[i]).max();
-            match kicker {
-                Some(k) => four_of_a_kind.push(*k),
-                None => return None,
+            if ranks_len > 4 {
+                // Find the highest card that is not part of the four of a kind
+                let kicker = ranks.iter().filter(|&&rank| rank != ranks[i]).max();
+                match kicker {
+                    Some(k) => four_of_a_kind.push(*k),
+                    None => return None,
+                }
             }
-
             return Some(four_of_a_kind);
         }
     }

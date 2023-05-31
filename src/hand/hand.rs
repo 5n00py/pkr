@@ -379,7 +379,7 @@ mod tests {
 
         let hand = Hand::new_from_str("As Ac Ad Ah").unwrap();
         let score = hand.get_score();
-        assert_eq!(score, 7_000_000 + (14 << 4) + 1);
+        assert_eq!(score, 7_000_000 + 14);
 
         let hand = Hand::new_from_str("9c Ks Kc Kd Kh Ts 2s").unwrap();
         let score = hand.get_score();
@@ -453,7 +453,7 @@ mod tests {
         );
     }
 
-        #[test]
+    #[test]
     fn test_straight() {
         let hand = Hand::new_from_str("2d Ac Js Ks Qs 9c Ts").unwrap();
         let score = hand.get_score();
