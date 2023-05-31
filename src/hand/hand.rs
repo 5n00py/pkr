@@ -550,4 +550,74 @@ mod tests {
         let score = hand.get_score();
         assert_eq!(score, 2_000_000 + (3 << 4) + 2);
     }
+
+    #[test]
+    fn test_pair() {
+        let hand = Hand::new_from_str("Ks Ac Ad 9h Js 2c Qs").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, 1_000_000 + (14 << 12) + (13 << 8) + (12 << 4) + 11);
+
+        let hand = Hand::new_from_str("Ks 2c Kd Ah Qd").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, 1_000_000 + (13 << 12) + (14 << 8) + (12 << 4) + 2);
+
+        let hand = Hand::new_from_str("Ks 2c Kd Qd").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, 1_000_000 + (13 << 8) + (12 << 4) + 2);
+
+        let hand = Hand::new_from_str("Ks 2c Kd").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, 1_000_000 + (13 << 4) + 2);
+
+        let hand = Hand::new_from_str("Ks Kd").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, 1_000_000 + 13);
+
+        let hand = Hand::new_from_str("Tc 3s 5c 8d 9h Ts 2s").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, 1_000_000 + (10 << 12) + (9 << 8) + (8 << 4) + 5);
+
+        let hand = Hand::new_from_str("4s 4c 2d 3h 5s 9c Ts").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, 1_000_000 + (4 << 12) + (10 << 8) + (9 << 4) + 5);
+
+        let hand = Hand::new_from_str("2s 2c Ah Kc").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, 1_000_000 + (2 << 8) + (14 << 4) + 13);
+    }
+
+    #[test]
+    fn test_high_card() {
+        let hand = Hand::new_from_str("Ks Ac 9d 8h Js 2c Qs").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, (14 << 16) + (13 << 12) + (12 << 8) + (11 << 4) + 9);
+
+        let hand = Hand::new_from_str("Ks 2c Jd Ah Qd").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, (14 << 16) + (13 << 12) + (12 << 8) + (11 << 4) + 2);
+
+        let hand = Hand::new_from_str("Ks 2c 3d Qd").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, (13 << 12) + (12 << 8) + (3 << 4) + 2);
+
+        let hand = Hand::new_from_str("Ks 2c 4d").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, (13 << 8) + (4 << 4) + 2);
+
+        let hand = Hand::new_from_str("As Kd").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, (14 << 4) + 13);
+
+        let hand = Hand::new_from_str("Ac 3s 5c 8d 9h Ts 2s").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, (14 << 16) + (10 << 12) + (9 << 8) + (8 << 4) + 5);
+
+        let hand = Hand::new_from_str("7s 4c 2d 3h 5s 8c 9s").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, (9 << 16) + (8 << 12) + (7 << 8) + (5 << 4) + 4);
+
+        let hand = Hand::new_from_str("2s 3c 4h 5c 7s").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, (7 << 16) + (5 << 12) + (4 << 8) + (3 << 4) + 2);
+    }
 }

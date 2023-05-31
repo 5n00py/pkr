@@ -1,8 +1,10 @@
+use crate::card::Rank;
 use crate::hand::Hand;
 
 use super::flush::find_flush;
 use super::four_of_a_kind::find_four_of_a_kind;
 use super::full_house::find_full_house;
+use super::pair::find_pair;
 use super::score::{calculate_hand_score, HandRank};
 use super::straight::find_straight;
 use super::three_of_a_kind::find_three_of_a_kind;
@@ -99,5 +101,21 @@ pub fn evaluate(hand: &Hand) -> u32 {
         // Panic if no three of a kind or two pair is found
         panic!("Unexpected behavior in hand evaluation: No paired hand found but expected.");
     }
-    return 0;
+
+    if num_duplicates > 0 {
+        let pair_opt = find_pair(&ranks_desc);
+        if let Some(pair) = pair_opt {
+            return calculate_hand_score(pair, HandRank::OnePair);
+        }
+        // We expect to find a pair here and panic otherwise ⊂(⊙д⊙)つ
+        panic!("Unexpected behavior in hand evaluation: No paired hand found but expected.");
+    }
+
+    let high_cards: Vec<Rank>;
+    if ranks_desc.len() < 5 {
+        high_cards = ranks_desc.clone();
+    } else {
+        high_cards = ranks_desc[0..5].to_vec();
+    }
+    return calculate_hand_score(high_cards.to_vec(), HandRank::HighCard);
 }
