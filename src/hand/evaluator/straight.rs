@@ -1,7 +1,7 @@
 use crate::card::Rank;
 
-/// Evaluates if a descending ordered and duplicate-free rank vector contains a
-/// straight.
+/// Finds in a descending ordered and duplicate-free rank vector straight or
+/// returns None.
 ///
 /// In poker, a straight is a hand that contains five cards of sequential rank,
 /// not all of the same suit.

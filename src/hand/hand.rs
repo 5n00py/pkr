@@ -137,6 +137,31 @@ impl Hand {
         self.cards.len()
     }
 
+    /// Returns the score of a Hand instance by calling the `evaluate` function.
+    /// The score makes hands comparable by strength.
+    ///
+    /// The hand's score is used to rank the hand in comparison with other
+    /// poker hands. A higher score represents a stronger hand. This is useful
+    /// in games of poker where the strength of a player's hand needs to be
+    /// compared to the hands of others.
+    ///
+    /// # Returns
+    ///
+    /// * `u32` - An unsigned 32-bit integer representing the score of the hand.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use pkr::hand::Hand;
+    ///
+    /// let hand1 = Hand::new_from_str("Ts Js Qs Ks As").unwrap();
+    /// assert_eq!(hand1.get_score(), 8000014);
+    ///
+    /// let hand2 = Hand::new_from_str("As Ah Ac Ad Ks").unwrap();
+    /// assert_eq!(hand2.get_score(), 7000237);
+    ///
+    /// assert!(hand1.get_score() > hand2.get_score());
+    /// ```
     pub fn get_score(&self) -> u32 {
         evaluate(self)
     }

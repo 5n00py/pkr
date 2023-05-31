@@ -29,9 +29,9 @@ impl Suit {
     ///
     /// # Errors
     ///
-    /// Returns an `Box<dyn std::error::Error>` if the string does not match
+    /// Returns an `Box<dyn Error>` if the string does not match
     /// any suit.
-    pub fn new_from_str(s: &str) -> Result<Self, Box<dyn std::error::Error>> {
+    pub fn new_from_str(s: &str) -> Result<Self, Box<dyn Error>> {
         match s {
             "h" => Ok(Suit::Heart),
             "d" => Ok(Suit::Diamond),
@@ -73,12 +73,6 @@ impl Suit {
     ///
     /// let suit = Suit::Diamond;
     /// assert_eq!(suit.as_str(), "d");
-    ///
-    /// let suit = Suit::Club;
-    /// assert_eq!(suit.as_str(), "c");
-    ///
-    /// let suit = Suit::Spade;
-    /// assert_eq!(suit.as_str(), "s");
     /// ```
     pub fn as_str(&self) -> &'static str {
         match self {

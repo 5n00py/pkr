@@ -73,15 +73,12 @@ pub fn calculate_hand_score(ranks: Vec<Rank>, hand_rank: HandRank) -> u32 {
 /// * The score of the ranks as an u32 integer.
 ///   If the list of ranks is empty, returns 0.
 fn calculate_rank_score(ranks: Vec<Rank>) -> u32 {
-    // If ranks vector contains less than 5 ranks, resize it to 5
-    // filling with Rank::Two (which corresponds to zero value as per your requirement).
     if ranks.is_empty() {
         return 0;
     }
 
     let mut score: u32 = 0;
 
-    // Evaluate only the first five ranks
     for rank in ranks.into_iter() {
         score = (score << 4) | (rank as u32);
     }
