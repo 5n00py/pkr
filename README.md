@@ -14,7 +14,7 @@ following to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-pkr = { git = "https://github.com/5n00py/pkr.git" }
+pkr = "0.1.1"
 ```
 
 ## Features
