@@ -496,4 +496,31 @@ mod tests {
         let score = hand.get_score();
         assert_eq!(score, 4_000_000 + 5);
     }
+
+    #[test]
+    fn test_three_of_a_kind() {
+        let hand = Hand::new_from_str("2s Ac Ad Ah Ts 9c Qs").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, 3_000_000 + (14 << 8) + (12 << 4) + 10);
+
+        let hand = Hand::new_from_str("As Ac Ad 2h").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, 3_000_000 + (14 << 4) + 2);
+
+        let hand = Hand::new_from_str("As Ac Ad").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, 3_000_000 + 14);
+
+        let hand = Hand::new_from_str("9c Ks Kc Kd Ah Ts 2s").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, 3_000_000 + (13 << 8) + (14 << 4) + 10);
+
+        let hand = Hand::new_from_str("9c 3s 2c 2d Kh Ts 2s").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, 3_000_000 + (2 << 8) + (13 << 4) + 10);
+
+        let hand = Hand::new_from_str("2s 2c 2d").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, 3_000_000 + 2);
+    }
 }

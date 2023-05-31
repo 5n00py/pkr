@@ -5,6 +5,7 @@ use super::four_of_a_kind::find_four_of_a_kind;
 use super::full_house::find_full_house;
 use super::score::{calculate_hand_score, HandRank};
 use super::straight::find_straight;
+use super::three_of_a_kind::find_three_of_a_kind;
 
 // This function evaluates the given Hand and returns its score as an unsigned 32-bit integer.
 pub fn evaluate(hand: &Hand) -> u32 {
@@ -34,7 +35,7 @@ pub fn evaluate(hand: &Hand) -> u32 {
         }
     }
 
-    let rank_desc = hand_desc.get_ranks();
+    let ranks_desc = hand_desc.get_ranks();
 
     // The ranks in descending order without duplicates are calculated here.
     // The reason is that we are trying to reduce the amount of computation needed
@@ -42,15 +43,15 @@ pub fn evaluate(hand: &Hand) -> u32 {
     // The number of duplicates in the original hand will inform us whether
     // the checks for a four of a kind or full house are necessary.
     // If the straight check is later needed, the deduplicated ranks are ready for use.
-    let mut ranks_desc_no_dup = rank_desc.clone();
+    let mut ranks_desc_no_dup = ranks_desc.clone();
     ranks_desc_no_dup.dedup();
-    let num_duplicates = rank_desc.len() - ranks_desc_no_dup.len();
+    let num_duplicates = ranks_desc.len() - ranks_desc_no_dup.len();
 
     if num_duplicates > 2 {
         // Check for a four of a kind in the hand by passing the ranks (in
         // descending order) to the function `find_four_of_a_kind`, which
         // returns an Option.
-        if let Some(four_of_a_kind) = find_four_of_a_kind(&rank_desc) {
+        if let Some(four_of_a_kind) = find_four_of_a_kind(&ranks_desc) {
             // If a four of a kind is found (i.e., the result is not None),
             // calculate the hand score using the vector result and the
             // FourOfAKind HandRank.
@@ -60,7 +61,7 @@ pub fn evaluate(hand: &Hand) -> u32 {
         // Check for a full house in the hand by passing the ranks (in
         // descending order) to the function `find_full_house`, which also
         // returns an Option.
-        if let Some(full_house) = find_full_house(&rank_desc) {
+        if let Some(full_house) = find_full_house(&ranks_desc) {
             // If a full house is found (i.e., the result is not None),
             // calculate the hand score using the vector result and the
             // FullHouse HandRank.
@@ -83,5 +84,11 @@ pub fn evaluate(hand: &Hand) -> u32 {
         return calculate_hand_score(vec![straight_rank], HandRank::Straight);
     }
 
+    if num_duplicates > 1 {
+        let three_of_a_kind_opt = find_three_of_a_kind(&ranks_desc);
+        if let Some(three_of_a_kind) = three_of_a_kind_opt {
+            return calculate_hand_score(three_of_a_kind, HandRank::ThreeOfAKind);
+        }
+    }
     return 0;
 }
