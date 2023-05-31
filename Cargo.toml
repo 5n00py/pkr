@@ -3,6 +3,9 @@ name = "pkr"
 version = "0.1.0"
 edition = "2021"
 authors = ["David Schmid <david.schmid@mailbox.org>"]
+description = "A library for evaluating poker hands"
+readme = "README.md"
+license = "GPL-3.0"
 
 [dependencies]
 rand = "0.8.5"
