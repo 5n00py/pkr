@@ -5,3 +5,4 @@ mod full_house;
 mod score;
 mod straight;
 mod three_of_a_kind;
+mod two_pair;

@@ -523,4 +523,31 @@ mod tests {
         let score = hand.get_score();
         assert_eq!(score, 3_000_000 + 2);
     }
+
+    #[test]
+    fn test_two_pair() {
+        let hand = Hand::new_from_str("Ks Ac Ad Kh Ts 2c Qs").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, 2_000_000 + (14 << 8) + (13 << 4) + 12);
+
+        let hand = Hand::new_from_str("Ks Qc Kd Ah Qd").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, 2_000_000 + (13 << 8) + (12 << 4) + 14);
+
+        let hand = Hand::new_from_str("Ks Qc Kd Qd").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, 2_000_000 + (13 << 4) + 12);
+
+        let hand = Hand::new_from_str("Tc 8s 9c 8d 9h Ts 2s").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, 2_000_000 + (10 << 8) + (9 << 4) + 8);
+
+        let hand = Hand::new_from_str("4s 4c 2d 5h 5s 9c 9s").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, 2_000_000 + (9 << 8) + (5 << 4) + 4);
+
+        let hand = Hand::new_from_str("2s 2c 3h 3c").unwrap();
+        let score = hand.get_score();
+        assert_eq!(score, 2_000_000 + (3 << 4) + 2);
+    }
 }

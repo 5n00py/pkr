@@ -6,6 +6,7 @@ use super::full_house::find_full_house;
 use super::score::{calculate_hand_score, HandRank};
 use super::straight::find_straight;
 use super::three_of_a_kind::find_three_of_a_kind;
+use super::two_pair::find_two_pair;
 
 // This function evaluates the given Hand and returns its score as an unsigned 32-bit integer.
 pub fn evaluate(hand: &Hand) -> u32 {
@@ -88,6 +89,11 @@ pub fn evaluate(hand: &Hand) -> u32 {
         let three_of_a_kind_opt = find_three_of_a_kind(&ranks_desc);
         if let Some(three_of_a_kind) = three_of_a_kind_opt {
             return calculate_hand_score(three_of_a_kind, HandRank::ThreeOfAKind);
+        }
+
+        let two_pair_opt = find_two_pair(&ranks_desc);
+        if let Some(two_pair) = two_pair_opt {
+            return calculate_hand_score(two_pair, HandRank::TwoPair);
         }
     }
     return 0;
